@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard — TNPSC Notes</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="letterhead">
+    <a href="../index.html" class="brand">
+      <span class="brand-eyebrow">Government Exam Preparation</span>
+      <span class="brand-title">TNPSC Notes — Admin</span>
+    </a>
+    <nav class="header-actions">
+      <a href="#" id="logoutBtn">Log out</a>
+    </nav>
+  </div>
+</header>
+
+<main class="admin-shell">
+
+  <section class="admin-card">
+    <h2>Categories</h2>
+    <form id="categoryForm">
+      <div class="field">
+        <label for="catName">New category name</label>
+        <input type="text" id="catName" placeholder="e.g. Tamil Nadu History" required>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn-primary">Add category</button>
+      </div>
+      <p class="form-message" id="catMsg"></p>
+    </form>
+    <div id="categoryListWrap" style="margin-top:18px;"></div>
+  </section>
+
+  <section class="admin-card">
+    <h2>Upload a PDF note</h2>
+    <form id="noteForm">
+      <div class="field">
+        <label for="noteTitle">Title</label>
+        <input type="text" id="noteTitle" placeholder="e.g. Indian Polity - Unit 3" required>
+      </div>
+      <div class="field">
+        <label for="noteDesc">Description (optional)</label>
+        <textarea id="noteDesc" placeholder="Short description of what's inside"></textarea>
+      </div>
+      <div class="field">
+        <label for="noteCategory">Category</label>
+        <select id="noteCategory" required></select>
+      </div>
+      <div class="field">
+        <label for="noteFile">PDF file</label>
+        <input type="file" id="noteFile" accept="application/pdf" required>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn-primary" id="uploadBtn">Upload</button>
+      </div>
+      <p class="form-message" id="noteMsg"></p>
+    </form>
+  </section>
+
+  <section class="admin-card">
+    <h2>All notes</h2>
+    <div id="noteListWrap"></div>
+  </section>
+
+</main>
+
+<script src="../js/config.js"></script>
+<script src="../js/admin.js"></script>
+</body>
+</html>

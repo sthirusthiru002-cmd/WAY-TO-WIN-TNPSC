@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login — TNPSC Notes</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="letterhead">
+    <a href="../index.html" class="brand">
+      <span class="brand-eyebrow">Government Exam Preparation</span>
+      <span class="brand-title">TNPSC Notes</span>
+    </a>
+  </div>
+</header>
+
+<main class="login-shell">
+  <div class="admin-card">
+    <h2>Admin Login</h2>
+    <form id="loginForm">
+      <div class="field">
+        <label for="username">Username</label>
+        <input type="text" id="username" required autocomplete="username">
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" required autocomplete="current-password">
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn-primary">Log in</button>
+      </div>
+      <p class="form-message" id="msg"></p>
+    </form>
+  </div>
+</main>
+
+<script src="../js/config.js"></script>
+<script>
+  document.getElementById("loginForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const msg = document.getElementById("msg");
+    msg.textContent = "";
+    msg.className = "form-message";
+
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Login failed.");
+      localStorage.setItem("tnpsc_admin_token", data.token);
+      window.location.href = "dashboard.html";
+    } catch (err) {
+      msg.textContent = err.message;
+      msg.classList.add("error");
+    }
+  });
+</script>
+</body>
+</html>
