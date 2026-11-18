@@ -1,21 +1,27 @@
 async function loadCategories() {
   const grid = document.getElementById("categoryGrid");
   try {
+    const folderQuery = encodeURIComponent(`'${GOOGLE_DRIVE_FOLDER_ID}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false`);
+    const fileQuery = encodeURIComponent(`mimeType != 'application/vnd.google-apps.folder' and trashed = false`);
+
     const [catRes, noteRes] = await Promise.all([
-      fetch(`${API_BASE_URL}/categories`),
-      fetch(`${API_BASE_URL}/notes`)
+      fetch(`https://googleapis.com{folderQuery}&fields=files(id,name)&orderBy=name&key=${GOOGLE_API_KEY}`),
+      fetch(`https://googleapis.com{fileQuery}&fields=files(id,parents)&pageSize=1000&key=${GOOGLE_API_KEY}`)
     ]);
-    const categories = await catRes.json();
-    const notes = await noteRes.json();
+
+    const catData = await catRes.json();
+    const noteData = await noteRes.json();
+    const categories = catData.files || [];
+    const notes = noteData.files || [];
 
     if (!categories.length) {
-      grid.innerHTML = `<p class="empty-state">No categories yet. Check back soon.</p>`;
+      grid.innerHTML = `<p class="empty-state">No subject folders found in Google Drive yet.</p>`;
       return;
     }
 
     grid.innerHTML = categories
       .map((cat, i) => {
-        const count = notes.filter((n) => n.categoryId === cat.id).length;
+        const count = notes.filter((n) => n.parents && n.parents.includes(cat.id)).length;
         const reg = `TN-${String(i + 1).padStart(3, "0")}`;
         return `
           <a class="category-card" href="category.html?id=${cat.id}&name=${encodeURIComponent(cat.name)}">
@@ -34,7 +40,7 @@ async function loadCategories() {
       });
     });
   } catch (err) {
-    grid.innerHTML = `<p class="empty-state">Could not load categories. Is the backend running?</p>`;
+    grid.innerHTML = `<p class="empty-state">Could not load categories. Check your API Key and Drive folder sharing.</p>`;
   }
 }
 
@@ -45,8 +51,3 @@ function escapeHtml(str) {
 }
 
 loadCategories();
-
-// Register service worker for installability (PWA)
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("sw.js").catch(() => {});
-}
