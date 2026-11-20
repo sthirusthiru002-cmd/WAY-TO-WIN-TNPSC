@@ -11,11 +11,17 @@ async function loadCategories() {
 
     const catData = await catRes.json();
     const noteData = await noteRes.json();
+
+    if (catData.error) {
+      grid.innerHTML = `<p class="empty-state">Google Error: ${escapeHtml(catData.error.message)}</p>`;
+      return;
+    }
+
     const categories = catData.files || [];
     const notes = noteData.files || [];
 
     if (!categories.length) {
-      grid.innerHTML = `<p class="empty-state">No subject folders found in Google Drive yet.</p>`;
+      grid.innerHTML = `<p class="empty-state">No subject folders found inside this Drive folder yet. Create subfolders (like History, Polity) inside Google Drive!</p>`;
       return;
     }
 
@@ -40,7 +46,7 @@ async function loadCategories() {
       });
     });
   } catch (err) {
-    grid.innerHTML = `<p class="empty-state">Could not load categories. Check your API Key and Drive folder sharing.</p>`;
+    grid.innerHTML = `<p class="empty-state">Network Error: ${escapeHtml(err.message)}</p>`;
   }
 }
 
