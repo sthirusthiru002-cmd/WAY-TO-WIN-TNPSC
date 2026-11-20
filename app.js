@@ -21,7 +21,7 @@ async function loadCategories() {
     const notes = noteData.files || [];
 
     if (!categories.length) {
-      grid.innerHTML = `<p class="empty-state">No subject folders found inside this Drive folder yet. Create subfolders (like History, Polity) inside Google Drive!</p>`;
+      grid.innerHTML = `<p class="empty-state">No subject folders found inside this Drive folder yet.</p>`;
       return;
     }
 
@@ -57,3 +57,4 @@ function escapeHtml(str) {
 }
 
 loadCategories();
+
